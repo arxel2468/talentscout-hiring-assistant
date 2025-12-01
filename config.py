@@ -7,7 +7,16 @@ import os
 from dotenv import load_dotenv
 from enum import Enum
 
-load_dotenv()
+load_dotenv()# Try to load from Streamlit secrets first, then environment variables
+def get_secret(key: str, default: str = "") -> str:
+    """Get secret from Streamlit secrets or environment variables."""
+    try:
+        import streamlit as st
+        if hasattr(st, 'secrets') and key in st.secrets:
+            return st.secrets[key]
+    except Exception:
+        pass
+    return os.getenv(key, default)
 
 # =============================================================================
 # LLM Provider Configuration
